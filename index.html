@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informasi Wi-Fi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --accent-color: #2980b9;
+      --background-color: #f2f4f8;
+      --card-bg: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .wrapper {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      color: var(--primary-color);
+      margin-bottom: 30px;
+    }
+
+    .wifi-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    .wifi-card h2 {
+      font-size: 18px;
+      color: var(--accent-color);
+      margin-bottom: 10px;
+    }
+
+    .wifi-info {
+      font-size: 15px;
+      color: #333;
+      margin: 4px 0;
+    }
+
+    .label {
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>Informasi Wi-Fi</h1>
+
+    <div class="wifi-card">
+      <h2>Jaringan 1</h2>
+      <p class="wifi-info"><span class="label">SSID:</span> My Indibiz 2,4G</p>
+      <p class="wifi-info"><span class="label">Password:</span> 12345678</p>
+    </div>
+
+    <div class="wifi-card">
+      <h2>Jaringan 2</h2>
+      <p class="wifi-info"><span class="label">SSID:</span> SMP2PUSAT</p>
+      <p class="wifi-info"><span class="label">Password:</span> password</p>
+    </div>
+
+    <footer>&copy; 2025 IT Support | Informasi Wi-Fi</footer>
+  </div>
+</body>
+</html>

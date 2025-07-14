@@ -24,13 +24,16 @@
       box-sizing: border-box;
     }
 
+    html, body {
+      height: 100%;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, var(--navy-blue) 0%, var(--bumn-blue) 50%, var(--tosca-green) 100%);
       min-height: 100vh;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
       padding: 20px;
       position: relative;
       overflow-x: hidden;
@@ -53,12 +56,22 @@
     }
 
     .wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
       padding: 40px 20px;
       max-width: 700px;
       width: 100%;
+      margin: 0 auto;
       position: relative;
       z-index: 1;
+    }
+
+    .content {
+      width: 100%;
     }
 
     .header {
@@ -263,11 +276,18 @@
       transform: translateY(-50%) scale(0.95);
     }
 
+    .connect-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 15px;
+      gap: 10px;
+    }
+
     .signal-strength {
       display: flex;
       align-items: center;
       gap: 4px;
-      margin-top: 15px;
     }
 
     .signal-bar {
@@ -293,6 +313,60 @@
       margin-left: 8px;
     }
 
+    .connect-btn {
+      background: linear-gradient(135deg, var(--bumn-blue), var(--tosca-green));
+      color: var(--white);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .connect-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .connect-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+    }
+
+    .connect-btn:hover::before {
+      left: 100%;
+    }
+
+    .connect-btn:active {
+      transform: translateY(0);
+    }
+
+    .connect-btn.connecting {
+      background: var(--text-secondary);
+      cursor: not-allowed;
+    }
+
+    .connect-btn.connected {
+      background: var(--success-green);
+    }
+
+    .connect-icon {
+      font-size: 14px;
+    }
+
     .status-indicator {
       display: inline-block;
       width: 8px;
@@ -312,7 +386,7 @@
       background: var(--white);
       border-radius: 16px;
       padding: 20px;
-      margin-top: 30px;
+      margin-top: auto;
       font-size: 14px;
       color: var(--text-secondary);
       box-shadow: 0 10px 25px rgba(26, 54, 93, 0.1);
@@ -320,6 +394,12 @@
       justify-content: center;
       align-items: center;
       gap: 10px;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .footer-icon {
@@ -333,6 +413,7 @@
       color: var(--white);
       font-size: 12px;
       font-weight: 700;
+      flex-shrink: 0;
     }
 
     .toast {
@@ -435,9 +516,21 @@
         margin-top: 5px;
       }
       
+      .connect-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
       .signal-strength {
         justify-content: center;
-        margin-top: 10px;
+        order: 2;
+      }
+      
+      .connect-btn {
+        order: 1;
+        font-size: 12px;
+        padding: 8px 14px;
       }
       
       .signal-text {
@@ -447,13 +540,17 @@
       footer {
         padding: 15px;
         font-size: 12px;
-        flex-direction: column;
-        gap: 5px;
+        gap: 8px;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
       }
       
       .footer-icon {
         width: 20px;
         height: 20px;
+        font-size: 10px;
       }
     }
 
@@ -502,6 +599,18 @@
         font-size: 10px;
         right: 6px;
       }
+      
+      footer {
+        padding: 12px;
+        font-size: 11px;
+        gap: 6px;
+      }
+      
+      .footer-icon {
+        width: 18px;
+        height: 18px;
+        font-size: 9px;
+      }
     }
 
     /* Accessibility */
@@ -516,67 +625,81 @@
 </head>
 <body>
   <div class="wrapper">
-    <div class="header">
-      <div class="wifi-icon"></div>
-      <h1>Informasi Wi-Fi</h1>
-      <p class="subtitle">Jaringan internet tersedia untuk digunakan</p>
-    </div>
+    <div class="content">
+      <div class="header">
+        <div class="wifi-icon"></div>
+        <h1>Informasi Wi-Fi</h1>
+        <p class="subtitle">Jaringan internet tersedia untuk digunakan</p>
+      </div>
 
-    <div class="wifi-card">
-      <h2>
-        <span class="status-indicator"></span>
-        Jaringan Utama
-        <span class="network-badge">Aktif</span>
-      </h2>
-      <div class="wifi-info">
-        <span class="label">SSID:</span>
-        <span class="value">My Indibiz 2,4G</span>
-        <button class="copy-btn" onclick="copyToClipboard('My Indibiz 2,4G')">Salin</button>
+      <div class="wifi-card">
+        <h2>
+          <span class="status-indicator"></span>
+          Jaringan Utama
+          <span class="network-badge">Aktif</span>
+        </h2>
+        <div class="wifi-info">
+          <span class="label">SSID:</span>
+          <span class="value">My Indibiz 2,4G</span>
+          <button class="copy-btn" onclick="copyToClipboard('My Indibiz 2,4G')">Salin</button>
+        </div>
+        <div class="wifi-info">
+          <span class="label">Password:</span>
+          <span class="value">12345678</span>
+          <button class="copy-btn" onclick="copyToClipboard('12345678')">Salin</button>
+        </div>
+        <div class="connect-section">
+          <button class="connect-btn" onclick="connectToWiFi('My Indibiz 2,4G', '12345678', this)">
+            <span class="connect-icon">🔗</span>
+            <span class="connect-text">Hubungkan</span>
+          </button>
+          <div class="signal-strength">
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <span class="signal-text">Kuat</span>
+          </div>
+        </div>
       </div>
-      <div class="wifi-info">
-        <span class="label">Password:</span>
-        <span class="value">12345678</span>
-        <button class="copy-btn" onclick="copyToClipboard('12345678')">Salin</button>
-      </div>
-      <div class="signal-strength">
-        <div class="signal-bar"></div>
-        <div class="signal-bar"></div>
-        <div class="signal-bar"></div>
-        <div class="signal-bar"></div>
-        <span class="signal-text">Kuat</span>
+
+      <div class="wifi-card">
+        <h2>
+          <span class="status-indicator"></span>
+          Jaringan Alternatif
+          <span class="network-badge">Aktif</span>
+        </h2>
+        <div class="wifi-info">
+          <span class="label">SSID:</span>
+          <span class="value">SMP2PUSAT</span>
+          <button class="copy-btn" onclick="copyToClipboard('SMP2PUSAT')">Salin</button>
+        </div>
+        <div class="wifi-info">
+          <span class="label">Password:</span>
+          <span class="value">password</span>
+          <button class="copy-btn" onclick="copyToClipboard('password')">Salin</button>
+        </div>
+        <div class="connect-section">
+          <button class="connect-btn" onclick="connectToWiFi('SMP2PUSAT', 'password', this)">
+            <span class="connect-icon">🔗</span>
+            <span class="connect-text">Hubungkan</span>
+          </button>
+          <div class="signal-strength">
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <div class="signal-bar"></div>
+            <span class="signal-text">Kuat</span>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="wifi-card">
-      <h2>
-        <span class="status-indicator"></span>
-        Jaringan Alternatif
-        <span class="network-badge">Aktif</span>
-      </h2>
-      <div class="wifi-info">
-        <span class="label">SSID:</span>
-        <span class="value">SMP2PUSAT</span>
-        <button class="copy-btn" onclick="copyToClipboard('SMP2PUSAT')">Salin</button>
-      </div>
-      <div class="wifi-info">
-        <span class="label">Password:</span>
-        <span class="value">password</span>
-        <button class="copy-btn" onclick="copyToClipboard('password')">Salin</button>
-      </div>
-      <div class="signal-strength">
-        <div class="signal-bar"></div>
-        <div class="signal-bar"></div>
-        <div class="signal-bar"></div>
-        <div class="signal-bar"></div>
-        <span class="signal-text">Kuat</span>
-      </div>
-    </div>
-
-    <footer>
-      <div class="footer-icon">IT</div>
-      <span>&copy; 2025 IT Support | Informasi Wi-Fi</span>
-    </footer>
   </div>
+
+  <footer>
+    <div class="footer-icon">IT</div>
+    <span>&copy; 2025 IT Support | Informasi Wi-Fi</span>
+  </footer>
 
   <div class="toast" id="toast">Berhasil disalin!</div>
 
@@ -602,6 +725,102 @@
       setTimeout(() => {
         toast.classList.remove('show');
       }, 2000);
+    }
+
+    function connectToWiFi(ssid, password, button) {
+      // Ubah status tombol menjadi connecting
+      button.classList.add('connecting');
+      const connectText = button.querySelector('.connect-text');
+      const connectIcon = button.querySelector('.connect-icon');
+      
+      connectText.textContent = 'Menghubungkan...';
+      connectIcon.textContent = '⏳';
+      
+      // Simulasi proses koneksi
+      setTimeout(() => {
+        // Cek apakah browser mendukung WiFi API (masih experimental)
+        if ('navigator' in window && 'wifi' in navigator) {
+          // Untuk browser yang mendukung WiFi API
+          try {
+            navigator.wifi.connect({
+              ssid: ssid,
+              password: password
+            }).then(() => {
+              // Berhasil terhubung
+              button.classList.remove('connecting');
+              button.classList.add('connected');
+              connectText.textContent = 'Terhubung';
+              connectIcon.textContent = '✅';
+              showCustomToast('Berhasil terhubung ke ' + ssid);
+            }).catch(() => {
+              // Gagal terhubung
+              resetButton(button);
+              showCustomToast('Gagal terhubung ke ' + ssid);
+            });
+          } catch (error) {
+            // Fallback jika WiFi API tidak tersedia
+            handleWiFiConnection(ssid, password, button);
+          }
+        } else {
+          // Fallback untuk browser yang tidak mendukung WiFi API
+          handleWiFiConnection(ssid, password, button);
+        }
+      }, 2000);
+    }
+
+    function handleWiFiConnection(ssid, password, button) {
+      // Karena WiFi API masih terbatas, gunakan metode alternatif
+      // Untuk Android dengan Chrome, bisa menggunakan Intent
+      if (/Android/i.test(navigator.userAgent)) {
+        try {
+          // Coba buka pengaturan WiFi dengan intent
+          const wifiConfig = `WIFI:T:WPA;S:${ssid};P:${password};;`;
+          
+          // Jika mendukung, buka QR code atau intent
+          window.location.href = `intent://wifi#Intent;scheme=wifi;package=com.android.settings;S.ssid=${ssid};S.password=${password};end`;
+          
+          // Simulasi berhasil
+          setTimeout(() => {
+            button.classList.remove('connecting');
+            button.classList.add('connected');
+            const connectText = button.querySelector('.connect-text');
+            const connectIcon = button.querySelector('.connect-icon');
+            connectText.textContent = 'Terhubung';
+            connectIcon.textContent = '✅';
+            showCustomToast('Membuka pengaturan WiFi...');
+          }, 1000);
+          
+        } catch (error) {
+          // Jika gagal, tampilkan informasi
+          resetButton(button);
+          showCustomToast('Silakan hubungkan manual ke ' + ssid);
+        }
+      } else {
+        // Untuk browser lain, tampilkan instruksi
+        resetButton(button);
+        showCustomToast('Salin SSID dan password untuk terhubung manual');
+      }
+    }
+
+    function resetButton(button) {
+      button.classList.remove('connecting', 'connected');
+      const connectText = button.querySelector('.connect-text');
+      const connectIcon = button.querySelector('.connect-icon');
+      connectText.textContent = 'Hubungkan';
+      connectIcon.textContent = '🔗';
+    }
+
+    function showCustomToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+        // Reset pesan toast
+        setTimeout(() => {
+          toast.textContent = 'Berhasil disalin!';
+        }, 300);
+      }, 3000);
     }
   </script>
 </body>

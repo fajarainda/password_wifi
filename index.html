@@ -733,73 +733,90 @@
       const connectText = button.querySelector('.connect-text');
       const connectIcon = button.querySelector('.connect-icon');
       
-      connectText.textContent = 'Menghubungkan...';
+      connectText.textContent = 'Membuka...';
       connectIcon.textContent = '⏳';
       
-      // Simulasi proses koneksi
+      // Simulasi delay untuk UX
       setTimeout(() => {
-        // Cek apakah browser mendukung WiFi API (masih experimental)
-        if ('navigator' in window && 'wifi' in navigator) {
-          // Untuk browser yang mendukung WiFi API
-          try {
-            navigator.wifi.connect({
-              ssid: ssid,
-              password: password
-            }).then(() => {
-              // Berhasil terhubung
-              button.classList.remove('connecting');
-              button.classList.add('connected');
-              connectText.textContent = 'Terhubung';
-              connectIcon.textContent = '✅';
-              showCustomToast('Berhasil terhubung ke ' + ssid);
-            }).catch(() => {
-              // Gagal terhubung
-              resetButton(button);
-              showCustomToast('Gagal terhubung ke ' + ssid);
-            });
-          } catch (error) {
-            // Fallback jika WiFi API tidak tersedia
-            handleWiFiConnection(ssid, password, button);
-          }
-        } else {
-          // Fallback untuk browser yang tidak mendukung WiFi API
-          handleWiFiConnection(ssid, password, button);
-        }
-      }, 2000);
-    }
-
-    function handleWiFiConnection(ssid, password, button) {
-      // Karena WiFi API masih terbatas, gunakan metode alternatif
-      // Untuk Android dengan Chrome, bisa menggunakan Intent
-      if (/Android/i.test(navigator.userAgent)) {
         try {
-          // Coba buka pengaturan WiFi dengan intent
-          const wifiConfig = `WIFI:T:WPA;S:${ssid};P:${password};;`;
+          // Cek platform dan buka pengaturan WiFi yang sesuai
+          const userAgent = navigator.userAgent.toLowerCase();
           
-          // Jika mendukung, buka QR code atau intent
-          window.location.href = `intent://wifi#Intent;scheme=wifi;package=com.android.settings;S.ssid=${ssid};S.password=${password};end`;
-          
-          // Simulasi berhasil
-          setTimeout(() => {
+          if (userAgent.includes('android')) {
+            // Android - buka pengaturan WiFi
+            try {
+              // Coba buka pengaturan WiFi langsung
+              window.open('intent://wifi#Intent;scheme=wifi;package=com.android.settings;end', '_system');
+            } catch (e) {
+              // Fallback - buka pengaturan umum
+              window.open('intent://settings#Intent;scheme=android.settings;package=com.android.settings;end', '_system');
+            }
+            
+            // Update button status
             button.classList.remove('connecting');
             button.classList.add('connected');
-            const connectText = button.querySelector('.connect-text');
-            const connectIcon = button.querySelector('.connect-icon');
-            connectText.textContent = 'Terhubung';
-            connectIcon.textContent = '✅';
-            showCustomToast('Membuka pengaturan WiFi...');
-          }, 1000);
+            connectText.textContent = 'Pengaturan Dibuka';
+            connectIcon.textContent = '📱';
+            
+            showCustomToast(`Pengaturan WiFi dibuka. Cari "${ssid}" dan gunakan password yang disediakan.`);
+            
+            // Reset button setelah 5 detik
+            setTimeout(() => resetButton(button), 5000);
+            
+          } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
+            // iOS - buka pengaturan WiFi
+            try {
+              window.open('App-Prefs:root=WIFI', '_system');
+            } catch (e) {
+              // Fallback
+              window.open('prefs:root=WIFI', '_system');
+            }
+            
+            button.classList.remove('connecting');
+            button.classList.add('connected');
+            connectText.textContent = 'Pengaturan Dibuka';
+            connectIcon.textContent = '📱';
+            
+            showCustomToast(`Pengaturan WiFi dibuka. Cari "${ssid}" dan gunakan password yang disediakan.`);
+            
+            setTimeout(() => resetButton(button), 5000);
+            
+          } else {
+            // Desktop/Browser lain - tampilkan instruksi dan salin kredensial
+            resetButton(button);
+            
+            // Salin SSID dan password ke clipboard
+            const wifiInfo = `SSID: ${ssid}\nPassword: ${password}`;
+            
+            if (navigator.clipboard) {
+              navigator.clipboard.writeText(wifiInfo).then(() => {
+                showCustomToast('Informasi WiFi disalin ke clipboard! Buka pengaturan WiFi untuk terhubung.');
+              }).catch(() => {
+                showCustomToast('Buka pengaturan WiFi dan hubungkan secara manual.');
+              });
+            } else {
+              showCustomToast('Buka pengaturan WiFi dan hubungkan secara manual.');
+            }
+          }
           
         } catch (error) {
-          // Jika gagal, tampilkan informasi
+          // Jika semua metode gagal
           resetButton(button);
-          showCustomToast('Silakan hubungkan manual ke ' + ssid);
+          
+          // Fallback - salin informasi WiFi
+          const wifiInfo = `SSID: ${ssid}\nPassword: ${password}`;
+          
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(wifiInfo).then(() => {
+              showCustomToast('Informasi WiFi disalin! Buka pengaturan WiFi untuk terhubung.');
+            }).catch(() => {
+              showCustomToast(`Hubungkan manual ke "${ssid}" dengan password yang tertera.`);
+            });
+          } else {
+            showCustomToast(`Hubungkan manual ke "${ssid}" dengan password yang tertera.`);
+          }
         }
-      } else {
-        // Untuk browser lain, tampilkan instruksi
-        resetButton(button);
-        showCustomToast('Salin SSID dan password untuk terhubung manual');
-      }
+      }, 1000);
     }
 
     function resetButton(button) {
@@ -820,7 +837,7 @@
         setTimeout(() => {
           toast.textContent = 'Berhasil disalin!';
         }, 300);
-      }, 3000);
+      }, 4000);
     }
   </script>
 </body>

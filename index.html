@@ -4,88 +4,483 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Informasi Wi-Fi</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #2c3e50;
-      --accent-color: #2980b9;
-      --background-color: #f2f4f8;
-      --card-bg: #ffffff;
+      --navy-blue: #1a365d;
+      --bumn-blue: #0066cc;
+      --tosca-green: #4fd1c7;
+      --light-blue: #e6f3ff;
+      --white: #ffffff;
+      --text-primary: #2d3748;
+      --text-secondary: #718096;
+      --shadow: rgba(26, 54, 93, 0.1);
+      --success-green: #38a169;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      margin: 0;
-      padding: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--background-color);
+      background: linear-gradient(135deg, var(--navy-blue) 0%, var(--bumn-blue) 50%, var(--tosca-green) 100%);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(79, 209, 199, 0.1) 0%, transparent 70%);
+      animation: float 25s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(180deg); }
     }
 
     .wrapper {
       text-align: center;
       padding: 40px 20px;
+      max-width: 700px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 40px 30px;
+      margin-bottom: 30px;
+      box-shadow: 
+        0 25px 50px rgba(26, 54, 93, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--bumn-blue), var(--tosca-green));
+      border-radius: 20px 20px 0 0;
+    }
+
+    .wifi-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--bumn-blue), var(--tosca-green));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 25px rgba(0, 102, 204, 0.3);
+      animation: pulse 3s infinite;
+      position: relative;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 8px 25px rgba(0, 102, 204, 0.3); }
+      50% { box-shadow: 0 8px 35px rgba(79, 209, 199, 0.4); }
+      100% { box-shadow: 0 8px 25px rgba(0, 102, 204, 0.3); }
+    }
+
+    .wifi-icon::before {
+      content: '📶';
+      font-size: 36px;
+      filter: grayscale(1) brightness(0) invert(1);
+    }
+
+    .wifi-icon::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 3px solid var(--tosca-green);
+      animation: ripple 2s infinite;
+      opacity: 0;
+    }
+
+    @keyframes ripple {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.5); opacity: 0; }
     }
 
     h1 {
-      color: var(--primary-color);
-      margin-bottom: 30px;
+      color: var(--navy-blue);
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+      font-weight: 400;
+      margin-bottom: 0;
     }
 
     .wifi-card {
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      padding: 20px 30px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
-      max-width: 400px;
+      background: var(--white);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 
+        0 20px 40px rgba(26, 54, 93, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      max-width: 500px;
       margin-left: auto;
       margin-right: auto;
       text-align: left;
+      position: relative;
+      overflow: hidden;
+      transform: translateY(0);
+      transition: all 0.3s ease;
+    }
+
+    .wifi-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 30px 60px rgba(26, 54, 93, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+
+    .wifi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--bumn-blue), var(--tosca-green));
+      border-radius: 20px 20px 0 0;
     }
 
     .wifi-card h2 {
-      font-size: 18px;
-      color: var(--accent-color);
-      margin-bottom: 10px;
+      font-size: 20px;
+      color: var(--navy-blue);
+      margin-bottom: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .network-badge {
+      background: linear-gradient(135deg, var(--tosca-green), var(--bumn-blue));
+      color: var(--white);
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .wifi-info {
-      font-size: 15px;
-      color: #333;
-      margin: 4px 0;
+      font-size: 16px;
+      color: var(--text-primary);
+      margin: 15px 0;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--light-blue), rgba(79, 209, 199, 0.05));
+      border-radius: 12px;
+      border-left: 4px solid var(--bumn-blue);
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .wifi-info:hover {
+      background: linear-gradient(135deg, rgba(79, 209, 199, 0.1), var(--light-blue));
+      border-left-color: var(--tosca-green);
     }
 
     .label {
       font-weight: 600;
+      color: var(--navy-blue);
+      margin-right: 10px;
+      display: inline-block;
+      min-width: 80px;
+    }
+
+    .value {
+      font-family: 'Courier New', monospace;
+      background: rgba(0, 102, 204, 0.1);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 500;
+      color: var(--bumn-blue);
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, var(--bumn-blue), var(--tosca-green));
+      color: var(--white);
+      border: none;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0;
+      font-weight: 500;
+    }
+
+    .wifi-info:hover .copy-btn {
+      opacity: 1;
+    }
+
+    .copy-btn:hover {
+      transform: translateY(-50%) scale(1.05);
+      box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+    }
+
+    .copy-btn:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .signal-strength {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 15px;
+    }
+
+    .signal-bar {
+      width: 4px;
+      background: var(--tosca-green);
+      border-radius: 2px;
+      animation: signal 1.5s infinite;
+    }
+
+    .signal-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+    .signal-bar:nth-child(2) { height: 12px; animation-delay: 0.1s; }
+    .signal-bar:nth-child(3) { height: 16px; animation-delay: 0.2s; }
+    .signal-bar:nth-child(4) { height: 20px; animation-delay: 0.3s; }
+
+    @keyframes signal {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .signal-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-left: 8px;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--success-green);
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0.3; }
     }
 
     footer {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 20px;
       margin-top: 30px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      box-shadow: 0 10px 25px rgba(26, 54, 93, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-icon {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, var(--bumn-blue), var(--tosca-green));
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
       font-size: 12px;
-      color: #999;
+      font-weight: 700;
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--success-green);
+      color: var(--white);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .wrapper {
+        padding: 20px 10px;
+      }
+      
+      .header {
+        padding: 30px 20px;
+      }
+      
+      .wifi-card {
+        padding: 25px 20px;
+      }
+      
+      h1 {
+        font-size: 28px;
+      }
+      
+      .wifi-icon {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .wifi-icon::before {
+        font-size: 28px;
+      }
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
 <body>
   <div class="wrapper">
-    <h1>Informasi Wi-Fi</h1>
-
-    <div class="wifi-card">
-      <h2>Jaringan 1</h2>
-      <p class="wifi-info"><span class="label">SSID:</span> My Indibiz 2,4G</p>
-      <p class="wifi-info"><span class="label">Password:</span> 12345678</p>
+    <div class="header">
+      <div class="wifi-icon"></div>
+      <h1>Informasi Wi-Fi</h1>
+      <p class="subtitle">Jaringan internet tersedia untuk digunakan</p>
     </div>
 
     <div class="wifi-card">
-      <h2>Jaringan 2</h2>
-      <p class="wifi-info"><span class="label">SSID:</span> SMP2PUSAT</p>
-      <p class="wifi-info"><span class="label">Password:</span> password</p>
+      <h2>
+        <span class="status-indicator"></span>
+        Jaringan Utama
+        <span class="network-badge">Aktif</span>
+      </h2>
+      <div class="wifi-info">
+        <span class="label">SSID:</span>
+        <span class="value">My Indibiz 2,4G</span>
+        <button class="copy-btn" onclick="copyToClipboard('My Indibiz 2,4G')">Salin</button>
+      </div>
+      <div class="wifi-info">
+        <span class="label">Password:</span>
+        <span class="value">12345678</span>
+        <button class="copy-btn" onclick="copyToClipboard('12345678')">Salin</button>
+      </div>
+      <div class="signal-strength">
+        <div class="signal-bar"></div>
+        <div class="signal-bar"></div>
+        <div class="signal-bar"></div>
+        <div class="signal-bar"></div>
+        <span class="signal-text">Kuat</span>
+      </div>
     </div>
 
-    <footer>&copy; 2025 IT Support | Informasi Wi-Fi</footer>
+    <div class="wifi-card">
+      <h2>
+        <span class="status-indicator"></span>
+        Jaringan Alternatif
+        <span class="network-badge">Aktif</span>
+      </h2>
+      <div class="wifi-info">
+        <span class="label">SSID:</span>
+        <span class="value">SMP2PUSAT</span>
+        <button class="copy-btn" onclick="copyToClipboard('SMP2PUSAT')">Salin</button>
+      </div>
+      <div class="wifi-info">
+        <span class="label">Password:</span>
+        <span class="value">password</span>
+        <button class="copy-btn" onclick="copyToClipboard('password')">Salin</button>
+      </div>
+      <div class="signal-strength">
+        <div class="signal-bar"></div>
+        <div class="signal-bar"></div>
+        <div class="signal-bar"></div>
+        <div class="signal-bar"></div>
+        <span class="signal-text">Kuat</span>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-icon">IT</div>
+      <span>&copy; 2025 IT Support | Informasi Wi-Fi</span>
+    </footer>
   </div>
+
+  <div class="toast" id="toast">Berhasil disalin!</div>
+
+  <script>
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(function() {
+        showToast();
+      }).catch(function() {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showToast();
+      });
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+  </script>
 </body>
 </html>

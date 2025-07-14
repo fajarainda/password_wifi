@@ -402,7 +402,7 @@
       .wifi-info {
         font-size: 14px;
         margin: 10px 0;
-        padding: 12px;
+        padding: 12px 50px 12px 12px;
         position: relative;
       }
       
@@ -417,13 +417,16 @@
       }
       
       .copy-btn {
-        position: static;
-        margin-top: 8px;
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
         opacity: 1;
         display: block;
-        width: 100%;
-        padding: 8px;
+        width: auto;
+        padding: 6px 10px;
         border-radius: 6px;
+        font-size: 11px;
       }
       
       .network-badge {
@@ -482,7 +485,7 @@
       
       .wifi-info {
         font-size: 13px;
-        padding: 10px;
+        padding: 10px 45px 10px 10px;
       }
       
       .label {
@@ -492,6 +495,12 @@
       
       .value {
         font-size: 12px;
+      }
+      
+      .copy-btn {
+        padding: 5px 8px;
+        font-size: 10px;
+        right: 6px;
       }
     }
 
@@ -559,7 +568,7 @@
         <div class="signal-bar"></div>
         <div class="signal-bar"></div>
         <div class="signal-bar"></div>
-        <span class="signal-text">Sedang</span>
+        <span class="signal-text">Kuat</span>
       </div>
     </div>
 

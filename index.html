@@ -276,97 +276,6 @@
       transform: translateY(-50%) scale(0.95);
     }
 
-    .connect-section {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 15px;
-      gap: 10px;
-    }
-
-    .signal-strength {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .signal-bar {
-      width: 3px;
-      background: var(--tosca-green);
-      border-radius: 2px;
-      animation: signal 2s infinite;
-    }
-
-    .signal-bar:nth-child(1) { height: 6px; animation-delay: 0s; }
-    .signal-bar:nth-child(2) { height: 9px; animation-delay: 0.2s; }
-    .signal-bar:nth-child(3) { height: 12px; animation-delay: 0.4s; }
-    .signal-bar:nth-child(4) { height: 15px; animation-delay: 0.6s; }
-
-    @keyframes signal {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 1; }
-    }
-
-    .signal-text {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-left: 8px;
-    }
-
-    .connect-btn {
-      background: linear-gradient(135deg, var(--bumn-blue), var(--tosca-green));
-      color: var(--white);
-      border: none;
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .connect-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .connect-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
-    }
-
-    .connect-btn:hover::before {
-      left: 100%;
-    }
-
-    .connect-btn:active {
-      transform: translateY(0);
-    }
-
-    .connect-btn.connecting {
-      background: var(--text-secondary);
-      cursor: not-allowed;
-    }
-
-    .connect-btn.connected {
-      background: var(--success-green);
-    }
-
-    .connect-icon {
-      font-size: 14px;
-    }
-
     .status-indicator {
       display: inline-block;
       width: 8px;
@@ -516,27 +425,6 @@
         margin-top: 5px;
       }
       
-      .connect-section {
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .signal-strength {
-        justify-content: center;
-        order: 2;
-      }
-      
-      .connect-btn {
-        order: 1;
-        font-size: 12px;
-        padding: 8px 14px;
-      }
-      
-      .signal-text {
-        font-size: 11px;
-      }
-      
       footer {
         padding: 15px;
         font-size: 12px;
@@ -648,19 +536,6 @@
           <span class="value">12345678</span>
           <button class="copy-btn" onclick="copyToClipboard('12345678')">Salin</button>
         </div>
-        <div class="connect-section">
-          <button class="connect-btn" onclick="connectToWiFi('My Indibiz 2,4G', '12345678', this)">
-            <span class="connect-icon">🔗</span>
-            <span class="connect-text">Hubungkan</span>
-          </button>
-          <div class="signal-strength">
-            <div class="signal-bar"></div>
-            <div class="signal-bar"></div>
-            <div class="signal-bar"></div>
-            <div class="signal-bar"></div>
-            <span class="signal-text">Kuat</span>
-          </div>
-        </div>
       </div>
 
       <div class="wifi-card">
@@ -678,19 +553,6 @@
           <span class="label">Password:</span>
           <span class="value">password</span>
           <button class="copy-btn" onclick="copyToClipboard('password')">Salin</button>
-        </div>
-        <div class="connect-section">
-          <button class="connect-btn" onclick="connectToWiFi('SMP2PUSAT', 'password', this)">
-            <span class="connect-icon">🔗</span>
-            <span class="connect-text">Hubungkan</span>
-          </button>
-          <div class="signal-strength">
-            <div class="signal-bar"></div>
-            <div class="signal-bar"></div>
-            <div class="signal-bar"></div>
-            <div class="signal-bar"></div>
-            <span class="signal-text">Kuat</span>
-          </div>
         </div>
       </div>
     </div>
@@ -724,120 +586,7 @@
       toast.classList.add('show');
       setTimeout(() => {
         toast.classList.remove('show');
-      }, 2000);
-    }
-
-    function connectToWiFi(ssid, password, button) {
-      // Ubah status tombol menjadi connecting
-      button.classList.add('connecting');
-      const connectText = button.querySelector('.connect-text');
-      const connectIcon = button.querySelector('.connect-icon');
-      
-      connectText.textContent = 'Membuka...';
-      connectIcon.textContent = '⏳';
-      
-      // Simulasi delay untuk UX
-      setTimeout(() => {
-        try {
-          // Cek platform dan buka pengaturan WiFi yang sesuai
-          const userAgent = navigator.userAgent.toLowerCase();
-          
-          if (userAgent.includes('android')) {
-            // Android - buka pengaturan WiFi
-            try {
-              // Coba buka pengaturan WiFi langsung
-              window.open('intent://wifi#Intent;scheme=wifi;package=com.android.settings;end', '_system');
-            } catch (e) {
-              // Fallback - buka pengaturan umum
-              window.open('intent://settings#Intent;scheme=android.settings;package=com.android.settings;end', '_system');
-            }
-            
-            // Update button status
-            button.classList.remove('connecting');
-            button.classList.add('connected');
-            connectText.textContent = 'Pengaturan Dibuka';
-            connectIcon.textContent = '📱';
-            
-            showCustomToast(`Pengaturan WiFi dibuka. Cari "${ssid}" dan gunakan password yang disediakan.`);
-            
-            // Reset button setelah 5 detik
-            setTimeout(() => resetButton(button), 5000);
-            
-          } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
-            // iOS - buka pengaturan WiFi
-            try {
-              window.open('App-Prefs:root=WIFI', '_system');
-            } catch (e) {
-              // Fallback
-              window.open('prefs:root=WIFI', '_system');
-            }
-            
-            button.classList.remove('connecting');
-            button.classList.add('connected');
-            connectText.textContent = 'Pengaturan Dibuka';
-            connectIcon.textContent = '📱';
-            
-            showCustomToast(`Pengaturan WiFi dibuka. Cari "${ssid}" dan gunakan password yang disediakan.`);
-            
-            setTimeout(() => resetButton(button), 5000);
-            
-          } else {
-            // Desktop/Browser lain - tampilkan instruksi dan salin kredensial
-            resetButton(button);
-            
-            // Salin SSID dan password ke clipboard
-            const wifiInfo = `SSID: ${ssid}\nPassword: ${password}`;
-            
-            if (navigator.clipboard) {
-              navigator.clipboard.writeText(wifiInfo).then(() => {
-                showCustomToast('Informasi WiFi disalin ke clipboard! Buka pengaturan WiFi untuk terhubung.');
-              }).catch(() => {
-                showCustomToast('Buka pengaturan WiFi dan hubungkan secara manual.');
-              });
-            } else {
-              showCustomToast('Buka pengaturan WiFi dan hubungkan secara manual.');
-            }
-          }
-          
-        } catch (error) {
-          // Jika semua metode gagal
-          resetButton(button);
-          
-          // Fallback - salin informasi WiFi
-          const wifiInfo = `SSID: ${ssid}\nPassword: ${password}`;
-          
-          if (navigator.clipboard) {
-            navigator.clipboard.writeText(wifiInfo).then(() => {
-              showCustomToast('Informasi WiFi disalin! Buka pengaturan WiFi untuk terhubung.');
-            }).catch(() => {
-              showCustomToast(`Hubungkan manual ke "${ssid}" dengan password yang tertera.`);
-            });
-          } else {
-            showCustomToast(`Hubungkan manual ke "${ssid}" dengan password yang tertera.`);
-          }
-        }
-      }, 1000);
-    }
-
-    function resetButton(button) {
-      button.classList.remove('connecting', 'connected');
-      const connectText = button.querySelector('.connect-text');
-      const connectIcon = button.querySelector('.connect-icon');
-      connectText.textContent = 'Hubungkan';
-      connectIcon.textContent = '🔗';
-    }
-
-    function showCustomToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-        // Reset pesan toast
-        setTimeout(() => {
-          toast.textContent = 'Berhasil disalin!';
-        }, 300);
-      }, 4000);
+      }, 3000);
     }
   </script>
 </body>

@@ -24,8 +24,9 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html {
       height: 100%;
+      overflow-x: hidden;
     }
 
     body {
@@ -37,6 +38,7 @@
       padding: 15px;
       position: relative;
       overflow-x: hidden;
+      width: 100vw;
     }
 
     body::before {
@@ -48,6 +50,7 @@
       height: 140%;
       background: radial-gradient(circle, rgba(79, 209, 199, 0.08) 0%, transparent 60%);
       animation: float 20s ease-in-out infinite;
+      will-change: transform;
     }
 
     @keyframes float {
@@ -72,6 +75,7 @@
 
     .content {
       width: 100%;
+      max-width: 100%;
     }
 
     .header {
@@ -84,6 +88,7 @@
         0 0 0 1px rgba(255, 255, 255, 0.1);
       position: relative;
       overflow: hidden;
+      width: 100%;
     }
 
     .header::before {
@@ -128,6 +133,8 @@
       font-weight: 700;
       margin-bottom: 8px;
       letter-spacing: -0.5px;
+      word-wrap: break-word;
+      max-width: 100%;
     }
 
     .subtitle {
@@ -135,6 +142,8 @@
       font-size: 14px;
       font-weight: 400;
       margin-bottom: 0;
+      word-wrap: break-word;
+      max-width: 100%;
     }
 
     .wifi-card {
@@ -146,6 +155,7 @@
         0 15px 30px rgba(26, 54, 93, 0.08),
         0 0 0 1px rgba(255, 255, 255, 0.1);
       max-width: 100%;
+      width: 100%;
       text-align: left;
       position: relative;
       overflow: hidden;
@@ -179,6 +189,9 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
+      word-wrap: break-word;
+      max-width: 100%;
     }
 
     .network-badge {
@@ -190,6 +203,7 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      flex-shrink: 0;
     }
 
     .wifi-info {
@@ -202,6 +216,8 @@
       border-left: 3px solid var(--bumn-blue);
       position: relative;
       transition: all 0.3s ease;
+      width: 100%;
+      overflow: hidden;
     }
 
     .wifi-info:hover {
@@ -215,6 +231,7 @@
       margin-right: 8px;
       display: inline-block;
       min-width: 70px;
+      flex-shrink: 0;
     }
 
     .value {
@@ -225,6 +242,9 @@
       font-weight: 500;
       color: var(--bumn-blue);
       position: relative;
+      word-wrap: break-word;
+      max-width: calc(100% - 120px);
+      display: inline-block;
     }
 
     .copy-btn {
@@ -242,6 +262,8 @@
       transition: all 0.3s ease;
       opacity: 0;
       font-weight: 500;
+      flex-shrink: 0;
+      z-index: 2;
     }
 
     .wifi-info:hover .copy-btn {
@@ -265,6 +287,7 @@
       border-radius: 50%;
       margin-right: 6px;
       animation: blink 2s infinite;
+      flex-shrink: 0;
     }
 
     @keyframes blink {
@@ -287,6 +310,7 @@
       position: relative;
       z-index: 1;
       width: 100%;
+      flex-wrap: wrap;
     }
 
     .footer-icon {
@@ -311,6 +335,7 @@
       
       .wrapper {
         padding: 15px 10px;
+        max-width: calc(100vw - 20px);
       }
       
       .header {
@@ -359,6 +384,7 @@
       
       .value {
         font-size: 12px;
+        max-width: calc(100% - 100px);
       }
       
       .copy-btn {
@@ -382,8 +408,13 @@
     }
 
     @media (max-width: 480px) {
+      body {
+        padding: 8px;
+      }
+      
       .wrapper {
         padding: 10px 5px;
+        max-width: calc(100vw - 16px);
       }
       
       .header {
@@ -424,6 +455,7 @@
       
       .value {
         font-size: 11px;
+        max-width: calc(100% - 85px);
       }
       
       .copy-btn {
@@ -445,12 +477,91 @@
       }
     }
 
+    /* Landscape orientation for mobile */
+    @media (max-width: 768px) and (orientation: landscape) {
+      body {
+        padding: 8px;
+      }
+      
+      .wrapper {
+        padding: 10px 5px;
+        max-width: calc(100vw - 16px);
+      }
+      
+      .header {
+        padding: 15px 12px;
+        margin-bottom: 12px;
+      }
+      
+      .wifi-card {
+        padding: 12px;
+        margin-bottom: 10px;
+      }
+      
+      h1 {
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+      
+      .wifi-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 10px;
+      }
+      
+      .wifi-icon::before {
+        font-size: 18px;
+      }
+      
+      .wifi-info {
+        padding: 6px 30px 6px 6px;
+        margin: 6px 0;
+      }
+      
+      footer {
+        padding: 8px;
+        font-size: 9px;
+      }
+    }
+
     /* Accessibility */
     @media (prefers-reduced-motion: reduce) {
       * {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+      }
+      
+      body::before {
+        animation: none;
+      }
+      
+      .wifi-icon {
+        animation: none;
+      }
+      
+      .status-indicator {
+        animation: none;
+      }
+    }
+
+    /* Focus states for accessibility */
+    .copy-btn:focus {
+      outline: 2px solid var(--bumn-blue);
+      outline-offset: 2px;
+      opacity: 1;
+    }
+
+    /* Touch target improvements */
+    @media (hover: none) and (pointer: coarse) {
+      .copy-btn {
+        opacity: 1;
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+      
+      .wifi-card:hover {
+        transform: none;
       }
     }
   </style>
